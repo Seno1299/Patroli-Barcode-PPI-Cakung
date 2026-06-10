@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Patroli Digital PPI Cakung</title>
+
+<style>
+
+body{
+font-family:Arial;
+padding:20px;
+text-align:center;
+}
+
+select,
+textarea,
+button{
+
+width:100%;
+padding:12px;
+margin-top:10px;
+
+}
+
+textarea{
+height:100px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Patroli Digital</h2>
+
+<div id="status">
+Mengambil GPS...
+</div>
+
+<script>
+
+const APPS_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbzqZsYEBL3JGJMOszfITbHL58WWn_bz45_qHzWULZujIiWSaLCI4Sza4ca11bwHriSIzg/exec";
+
+const radius = 20;
+
+const kejadianMap = {
+
+"K01":"Bangunan & Akses",
+"K02":"Alat Kerja & Mekanik",
+"K03":"Peralatan Kantor",
+"K04":"Kendaraan",
+"K05":"Kelistrikan",
+"K06":"Air & Sanitasi",
+"K07":"Pencahayaan",
+"K08":"Lingkungan & Cuaca",
+"K09":"Security & Emergency",
+"K10":"Aman dan Terkendali"
+
+};
+
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+const wilayah =
+params.get("wilayah");
+
+const subwilayah =
+params.get("subwilayah");
+
+const checkpoint =
+params.get("checkpoint");
+
+const targetLat =
+parseFloat(params.get("lat"));
+
+const targetLng =
+parseFloat(params.get("lng"));
+
+navigator.geolocation.getCurrentPosition(
+success,
+error,
+{
+enableHighAccuracy:true,
+timeout:15000
+}
+);
+
+function success(position){
+
+const lat =
+position.coords.latitude;
+
+const lng =
+position.coords.longitude;
+
+const distance =
+hitungJarak(
+lat,
+lng,
+targetLat,
+targetLng
+);
+
+if(distance > radius){
+
+document.getElementById(
+"status"
+).innerHTML =
+
+"❌ Di luar area patroli<br><br>" +
+
+distance.toFixed(1)+
+" Meter";
+
+return;
+
+}
+
+formTemuan(
+lat,
+lng,
+distance
+);
+
+}
+
+function formTemuan(
+lat,
+lng,
+distance
+){
+
+document.getElementById(
+"status"
+).innerHTML=
+
+`
+<h3>${checkpoint}</h3>
+
+<select id="kode">
+
+<option value="K10">
+K10 - Aman dan Terkendali
+</option>
+
+<option value="K01">
+K01 - Bangunan & Akses
+</option>
+
+<option value="K02">
+K02 - Alat Kerja & Mekanik
+</option>
+
+<option value="K03">
+K03 - Peralatan Kantor
+</option>
+
+<option value="K04">
+K04 - Kendaraan
+</option>
+
+<option value="K05">
+K05 - Kelistrikan
+</option>
+
+<option value="K06">
+K06 - Air & Sanitasi
+</option>
+
+<option value="K07">
+K07 - Pencahayaan
+</option>
+
+<option value="K08">
+K08 - Lingkungan & Cuaca
+</option>
+
+<option value="K09">
+K09 - Security & Emergency
+</option>
+
+</select>
+
+<textarea
+id="deskripsi"
+placeholder="Deskripsi Temuan">
+</textarea>
+
+<button onclick="
+submitData(
+${lat},
+${lng},
+${distance}
+)">
+Submit
+</button>
+`;
+
+}
+
+function submitData(
+lat,
+lng,
+distance
+){
+
+const kode =
+document.getElementById(
+"kode"
+).value;
+
+let deskripsi =
+document.getElementById(
+"deskripsi"
+).value;
+
+if(kode=="K10"){
+
+deskripsi =
+"Aman dan Terkendali";
+
+}
+
+if(kode!="K10" && !deskripsi){
+
+alert(
+"Isi deskripsi temuan"
+);
+
+return;
+
+}
+
+fetch(
+APPS_SCRIPT_URL,
+{
+method:"POST",
+body:JSON.stringify({
+
+nama:
+localStorage.getItem(
+"nama"
+),
+
+nrp:
+localStorage.getItem(
+"nrp"
+),
+
+wilayah:
+wilayah,
+
+subwilayah:
+subwilayah,
+
+checkpoint:
+checkpoint,
+
+kode:
+kode,
+
+kategori:
+kejadianMap[kode],
+
+deskripsi:
+deskripsi,
+
+lat:
+lat,
+
+lng:
+lng,
+
+jarak:
+distance
+
+})
+}
+)
+.then(r=>r.text())
+.then(res=>{
+
+document.getElementById(
+"status"
+).innerHTML=
+
+`
+<h3>
+✅ Patroli Berhasil
+</h3>
+
+Checkpoint:
+${checkpoint}
+
+<br><br>
+
+Kategori:
+${kejadianMap[kode]}
+`;
+
+});
+
+}
+
+function error(){
+
+document.getElementById(
+"status"
+).innerHTML=
+
+"GPS tidak dapat dibaca";
+
+}
+
+function hitungJarak(
+lat1,
+lon1,
+lat2,
+lon2
+){
+
+const R=6371e3;
+
+const p1=lat1*Math.PI/180;
+const p2=lat2*Math.PI/180;
+
+const dp=
+(lat2-lat1)*Math.PI/180;
+
+const dl=
+(lon2-lon1)*Math.PI/180;
+
+const a=
+
+Math.sin(dp/2)*
+Math.sin(dp/2)+
+
+Math.cos(p1)*
+Math.cos(p2)*
+
+Math.sin(dl/2)*
+Math.sin(dl/2);
+
+const c=
+
+2*Math.atan2(
+Math.sqrt(a),
+Math.sqrt(1-a)
+);
+
+return R*c;
+
+}
+
+</script>
+
+</body>
+</html>
