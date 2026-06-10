@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login Patroli</title>
+
+<style>
+body{
+font-family:Arial;
+max-width:400px;
+margin:auto;
+padding:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+}
+
+button{
+width:100%;
+padding:12px;
+background:#28a745;
+color:white;
+border:none;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Login Patroli</h2>
+
+<input id="nama" placeholder="Nama">
+
+<input id="nrp" placeholder="NRP">
+
+<button onclick="simpan()">
+Simpan
+</button>
+
+<script>
+
+function simpan(){
+
+localStorage.setItem(
+"nama",
+document.getElementById("nama").value
+);
+
+localStorage.setItem(
+"nrp",
+document.getElementById("nrp").value
+);
+
+alert("Data berhasil disimpan");
+
+}
+
+</script>
+
+</body>
+</html>
