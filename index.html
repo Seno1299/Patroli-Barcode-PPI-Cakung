@@ -289,8 +289,12 @@ fetch(APPS_SCRIPT_URL,{
   method:"POST",
   body:JSON.stringify(data)
 })
-.then(res=>res.json())
-.then(res=>{
+.then(res=>res.text())
+.then(text=>{
+
+  alert("RESPON APPS SCRIPT:\n" + text);
+
+})
 
   if(res.status=="duplicate"){
 
