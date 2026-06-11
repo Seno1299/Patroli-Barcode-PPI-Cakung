@@ -81,6 +81,13 @@ parseFloat(params.get("lat"));
 const targetLng =
 parseFloat(params.get("lng"));
 
+const nama = localStorage.getItem("nama");
+const nrp = localStorage.getItem("nrp");
+
+if (!nama || !nrp) {
+    window.location.href = "login.html";
+}
+    
 navigator.geolocation.getCurrentPosition(
 success,
 error,
@@ -90,8 +97,6 @@ timeout:15000
 }
 );
 
-const nama = localStorage.getItem("nama");
-const nrp = localStorage.getItem("nrp");
 
 if (!nama || !nrp) {
     window.location.href = "login.html";
@@ -249,7 +254,20 @@ alert(
 return;
 
 }
-
+const data = {
+  nama: localStorage.getItem("nama"),
+  nrp: localStorage.getItem("nrp"),
+  wilayah: wilayah,
+  subwilayah: subwilayah,
+  checkpoint: checkpoint,
+  kode: kode,
+  kategori: kejadianMap[kode],
+  deskripsi: deskripsi,
+  lat: lat,
+  lng: lng,
+  jarak: distance
+};
+    
 fetch(APPS_SCRIPT_URL,{
   method:"POST",
   body:JSON.stringify(data)
@@ -286,6 +304,7 @@ fetch(APPS_SCRIPT_URL,{
   }
 
 });
+}    
 function error(){
 
 document.getElementById(
