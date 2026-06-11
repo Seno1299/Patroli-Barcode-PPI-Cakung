@@ -284,15 +284,22 @@ fetch(APPS_SCRIPT_URL,{
   method:"POST",
   body:JSON.stringify(data)
 })
-.then(res=>res.text())
-.then(text=>{
-
-  alert("RESPON APPS SCRIPT:\n" + text);
+.then(res=>{
 
   document.body.innerHTML = `
     <h2>✅ Patroli Berhasil</h2>
-    <p>Checkpoint : ${checkpoint}</p>
-    <p>Data tersimpan.</p>
+
+    <p>
+    Checkpoint : ${checkpoint}
+    </p>
+
+    <p>
+    Kategori : ${kejadianMap[kode]}
+    </p>
+
+    <p>
+    Data telah tersimpan ke sistem.
+    </p>
   `;
 
 })
