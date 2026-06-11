@@ -90,6 +90,14 @@ timeout:15000
 }
 );
 
+const nama = localStorage.getItem("nama");
+const nrp = localStorage.getItem("nrp");
+
+if (!nama || !nrp) {
+    window.location.href = "login.html";
+}
+    
+
 function success(position){
 
 const lat =
@@ -361,10 +369,3 @@ return R*c;
 
 </body>
 </html>
-
-const nama = localStorage.getItem("nama");
-const nrp = localStorage.getItem("nrp");
-
-if (!nama || !nrp) {
-    window.location.href = "login.html";
-}
