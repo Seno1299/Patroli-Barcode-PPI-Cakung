@@ -96,12 +96,7 @@ enableHighAccuracy:true,
 timeout:15000
 }
 );
-
-
-if (!nama || !nrp) {
-    window.location.href = "login.html";
-}
-    
+   
 
 function success(position){
 alert(
@@ -294,39 +289,11 @@ fetch(APPS_SCRIPT_URL,{
 
   alert("RESPON APPS SCRIPT:\n" + text);
 
-})
-
-  if(res.status=="duplicate"){
-
-    alert(res.pesan);
-
-    document.getElementById("btnSubmit").disabled = false;
-    document.getElementById("btnSubmit").innerText = "Submit";
-
-    return;
-  }
-
-  if(res.status=="success"){
-
-    document.body.innerHTML = `
-      <h2>✅ Patroli Berhasil</h2>
-
-      <p>
-      Checkpoint :
-      ${checkpoint}
-      </p>
-
-      <p>
-      Kategori :
-      ${kejadianMap[kode]}
-      </p>
-
-      <p>
-      Data telah tersimpan ke sistem.
-      </p>
-    `;
-
-  }
+  document.body.innerHTML = `
+    <h2>✅ Patroli Berhasil</h2>
+    <p>Checkpoint : ${checkpoint}</p>
+    <p>Data tersimpan.</p>
+  `;
 
 })
 .catch(err=>{
@@ -334,7 +301,6 @@ fetch(APPS_SCRIPT_URL,{
   console.error(err);
 
   document.getElementById("btnSubmit").disabled = false;
-
   document.getElementById("btnSubmit").innerText = "Submit";
 
   alert("Gagal mengirim data");
