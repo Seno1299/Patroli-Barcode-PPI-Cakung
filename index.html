@@ -99,6 +99,12 @@ if (!nama || !nrp) {
     
 
 function success(position){
+alert(
+"GPS Berhasil\n" +
+position.coords.latitude +
+"\n" +
+position.coords.longitude
+);    
 
 const lat =
 position.coords.latitude;
